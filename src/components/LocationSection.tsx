@@ -1,4 +1,4 @@
-import { MapPin, Phone, Clock, InstagramLogo, WhatsappLogo } from '@phosphor-icons/react'
+import { MapPin, Phone, Clock, InstagramLogo } from '@phosphor-icons/react'
 import { Card, CardContent } from '@/components/ui/card'
 import { contactInfo } from '@/lib/data'
 
@@ -70,27 +70,6 @@ export function LocationSection() {
 
             <Card>
               <CardContent className="flex items-start gap-4 p-6">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-success/20 text-success">
-                  <WhatsappLogo size={24} weight="fill" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="mb-1 font-heading text-lg font-semibold text-foreground">
-                    WhatsApp
-                  </h3>
-                  <a
-                    href={contactInfo.whatsappLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block text-sm text-muted-foreground hover:text-success"
-                  >
-                    {contactInfo.whatsapp}
-                  </a>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="flex items-start gap-4 p-6">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <Clock size={24} weight="fill" />
                 </div>
@@ -100,7 +79,7 @@ export function LocationSection() {
                   </h3>
                   <p className="text-sm text-muted-foreground">{contactInfo.schedule}</p>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Consulta horarios específicos por WhatsApp
+                    Consulta horarios específicos por teléfono o chatbot
                   </p>
                 </div>
               </CardContent>

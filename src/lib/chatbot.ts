@@ -79,7 +79,7 @@ export async function sendMessage(message: string, sessionId: string, messageCou
     }
 
     return {
-      response: `Disculpa, estoy teniendo problemas de conexión. 😔\n\nPor favor intenta:\n• Refrescar la página\n• Contactarnos por WhatsApp: wa.me/5216861083647\n• Llamar al: 686 108 3647`,
+      response: `Disculpa, estoy teniendo problemas de conexión. 😔\n\nPor favor intenta:\n• Refrescar la página\n• Llamar al: 686 108 3647\n• Intentar de nuevo en unos momentos`,
       session_id: sessionId,
       timestamp: new Date().toISOString()
     }

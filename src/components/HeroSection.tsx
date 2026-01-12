@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { WhatsappLogo } from '@phosphor-icons/react'
-import { contactInfo } from '@/lib/data'
+import { ChatCircle } from '@phosphor-icons/react'
 
 interface HeroSectionProps {
   onOpenChat: () => void
@@ -42,18 +41,11 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
             <Button
               size="lg"
               variant="outline"
-              asChild
+              onClick={onOpenChat}
               className="w-full border-2 text-base font-semibold sm:w-auto"
             >
-              <a
-                href={contactInfo.whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2"
-              >
-                <WhatsappLogo size={24} weight="fill" />
-                WhatsApp Directo
-              </a>
+              <ChatCircle size={24} weight="fill" className="mr-2" />
+              Consultar en Línea
             </Button>
           </div>
 

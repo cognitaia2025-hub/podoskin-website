@@ -30,7 +30,7 @@ This is a multi-section marketing website with interactive chatbot functionality
 - **Functionality**: Embedded Google Maps, contact information, and social media links
 - **Purpose**: Make it easy for patients to find and contact the clinic
 - **Trigger**: User scrolls to location section or clicks "Ubicación" in navigation
-- **Progression**: View map → See address details → Click WhatsApp/phone link → External app opens
+- **Progression**: View map → See address details → Click phone link or chatbot → Contact made
 - **Success criteria**: Interactive map loads correctly, all contact links functional
 
 ### Contact Form
@@ -49,7 +49,7 @@ This is a multi-section marketing website with interactive chatbot functionality
 
 ## Edge Case Handling
 
-- **API Failure**: Display friendly error message with fallback WhatsApp/phone contact options and automatic retry logic
+- **API Failure**: Display friendly error message with fallback phone contact option and automatic retry logic
 - **No Internet**: Show offline indicator in chatbot, queue messages for when connection restored
 - **Long Messages**: Truncate at 500 characters with warning, enable multiline input with scroll
 - **Empty Form Submission**: Show validation errors with clear instructions for required fields
@@ -117,7 +117,7 @@ Key animations: floating chat button pulse (3s interval), service card lift on h
 
 - **Icon Selection**:
   - Navigation: List for hamburger menu, X for close
-  - Contact: Phone, WhatsApp (custom logo), MapPin, Clock, Instagram
+  - Contact: Phone, ChatCircle, MapPin, Clock, Instagram
   - Chatbot: ChatCircle for main button, PaperPlaneRight for send, Minus/X for minimize/close
   - Services: Footprints, FirstAid, Scissors, Sparkle, Virus, Eraser, Lightning for laser
   - Quick Actions: Calendar, List, MapPin, Info, Question

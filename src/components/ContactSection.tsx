@@ -34,7 +34,7 @@ export function ContactSection({ onOpenChat }: ContactSectionProps) {
     }))
 
     toast.success('¡Gracias por tu interés!', {
-      description: 'Para atención inmediata, usa nuestro chatbot o contáctanos por WhatsApp'
+      description: 'Para atención inmediata, usa nuestro chatbot en línea'
     })
 
     setFormData({ name: '', phone: '', service: '', message: '' })

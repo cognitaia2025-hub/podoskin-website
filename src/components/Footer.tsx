@@ -1,4 +1,4 @@
-import { InstagramLogo, WhatsappLogo, Phone, MapPin } from '@phosphor-icons/react'
+import { InstagramLogo, Phone, MapPin } from '@phosphor-icons/react'
 import { contactInfo } from '@/lib/data'
 
 export function Footer() {
@@ -79,17 +79,6 @@ export function Footer() {
                 >
                   <Phone size={16} weight="fill" />
                   {contactInfo.phone}
-                </a>
-              </li>
-              <li>
-                <a
-                  href={contactInfo.whatsappLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-muted-foreground transition-colors hover:text-success"
-                >
-                  <WhatsappLogo size={16} weight="fill" />
-                  WhatsApp
                 </a>
               </li>
               <li className="flex items-start gap-2 text-muted-foreground">

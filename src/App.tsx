@@ -4,6 +4,7 @@ import { Header } from '@/components/Header'
 import { HeroSection } from '@/components/HeroSection'
 import { ServicesSection } from '@/components/ServicesSection'
 import { BenefitsSection } from '@/components/BenefitsSection'
+import { GallerySection } from '@/components/GallerySection'
 import { LocationSection } from '@/components/LocationSection'
 import { ContactSection } from '@/components/ContactSection'
 import { Footer } from '@/components/Footer'
@@ -33,6 +34,7 @@ function App() {
         <HeroSection onOpenChat={() => handleOpenChat()} />
         <ServicesSection onOpenChat={handleOpenChat} />
         <BenefitsSection />
+        <GallerySection />
         <LocationSection />
         <ContactSection onOpenChat={() => handleOpenChat()} />
       </main>

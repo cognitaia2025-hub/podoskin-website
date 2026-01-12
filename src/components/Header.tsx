@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Phone, List, X } from '@phosphor-icons/react'
 import { contactInfo } from '@/lib/data'
+import logoPodoskin from '@/assets/images/logo_podoskin.png'
 
 interface HeaderProps {
   onOpenChat: () => void
@@ -22,10 +23,12 @@ export function Header({ onOpenChat }: HeaderProps) {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="container mx-auto max-w-7xl px-4">
         <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-              <span className="text-xl font-bold text-primary-foreground">P</span>
-            </div>
+          <div className="flex items-center gap-3">
+            <img 
+              src={logoPodoskin} 
+              alt="Podoskin Solutions Logo" 
+              className="h-12 w-auto object-contain"
+            />
             <div className="flex flex-col">
               <span className="font-heading text-lg font-bold leading-none text-foreground">Podoskin</span>
               <span className="text-xs text-muted-foreground">Solutions</span>

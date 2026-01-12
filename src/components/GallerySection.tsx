@@ -12,7 +12,7 @@ const galleryImages = [
 
 export function GallerySection() {
   return (
-    <section className="bg-muted/30 py-16 md:py-24">
+    <section id="galeria" className="bg-muted/30 py-16 md:py-24">
       <div className="container mx-auto max-w-7xl px-4">
         <div className="mb-12 text-center">
           <h2 className="mb-4 font-heading text-3xl font-bold text-foreground md:text-4xl">

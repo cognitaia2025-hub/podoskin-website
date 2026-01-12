@@ -3,9 +3,12 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { X, Minus, PaperPlaneRight, ChatCircle } from '@phosphor-icons/react'
-import { ChatMessage } from '@/lib/types'
+import { ChatMessage, PatientData } from '@/lib/types'
 import { getOrCreateSession, sendMessage, saveMessage, loadMessages } from '@/lib/chatbot'
 import { quickReplies } from '@/lib/data'
+import { hasPatientSession, loadPatientData } from '@/lib/patient'
+import { PatientRegistrationForm } from './PatientRegistrationForm'
+import { PatientLookupForm } from './PatientLookupForm'
 
 interface ChatbotProps {
   isOpen: boolean
@@ -19,32 +22,87 @@ export function Chatbot({ isOpen, onClose, initialMessage }: ChatbotProps) {
   const [isTyping, setIsTyping] = useState(false)
   const [isMinimized, setIsMinimized] = useState(false)
   const [sessionId] = useState(() => getOrCreateSession())
+  const [chatStep, setChatStep] = useState<'welcome' | 'lookup' | 'register' | 'chat'>('welcome')
+  const [patientData, setPatientData] = useState<PatientData | null>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (isOpen) {
-      const savedMessages = loadMessages()
-      if (savedMessages.length > 0) {
-        setMessages(savedMessages)
-      } else {
-        const welcomeMessage: ChatMessage = {
-          id: crypto.randomUUID(),
-          content: `¡Hola! 👋 Bienvenido a Podoskin Solutions.\n\nSoy tu asistente virtual y puedo ayudarte con:\n\n🩺 Agendar una cita\n📋 Información sobre servicios\n📍 Ubicación y horarios\n💬 Resolver dudas sobre tratamientos\n📞 Conectarte con un especialista\n\n¿En qué puedo asistirte hoy?`,
-          sender: 'bot',
-          timestamp: new Date().toISOString()
+      // Verificar si ya hay un paciente registrado
+      if (hasPatientSession()) {
+        const existingPatient = loadPatientData()
+        if (existingPatient) {
+          setPatientData(existingPatient)
+          setChatStep('chat')
+          loadChatMessages(existingPatient.firstName)
+        } else {
+          showWelcomeMessage()
         }
-        setMessages([welcomeMessage])
-        saveMessage(welcomeMessage)
+      } else {
+        showWelcomeMessage()
       }
 
-      if (initialMessage) {
+      if (initialMessage && chatStep === 'chat') {
         setTimeout(() => {
           handleSendMessage(initialMessage)
         }, 500)
       }
     }
   }, [isOpen])
+
+  const showWelcomeMessage = () => {
+    const welcomeMessage: ChatMessage = {
+      id: crypto.randomUUID(),
+      content: `¡Hola! 👋 Bienvenido a **Podoskin Solutions**.\n\nSoy tu asistente virtual. Para brindarte un mejor servicio y cumplir con las normas de privacidad, necesito saber:\n\n¿Ya eres paciente registrado con nosotros?`,
+      sender: 'bot',
+      timestamp: new Date().toISOString()
+    }
+    setMessages([welcomeMessage])
+    setChatStep('welcome')
+  }
+
+  const loadChatMessages = (firstName?: string) => {
+    const savedMessages = loadMessages()
+    if (savedMessages.length > 0) {
+      setMessages(savedMessages)
+    } else {
+      const welcomeBackMessage: ChatMessage = {
+        id: crypto.randomUUID(),
+        content: `¡Hola${firstName ? ` ${firstName}` : ''}! 👋 Bienvenido de nuevo a Podoskin Solutions.\n\n¿En qué puedo ayudarte hoy?\n\n🩺 Agendar una cita\n📋 Información sobre servicios\n📍 Ubicación y horarios\n💬 Resolver dudas sobre tratamientos\n📞 Conectarte con un especialista`,
+        sender: 'bot',
+        timestamp: new Date().toISOString()
+      }
+      setMessages([welcomeBackMessage])
+      saveMessage(welcomeBackMessage)
+    }
+  }
+
+  const handlePatientChoice = (isRegistered: boolean) => {
+    const userMessage: ChatMessage = {
+      id: crypto.randomUUID(),
+      content: isRegistered ? 'Sí, ya soy paciente' : 'No, soy nuevo',
+      sender: 'user',
+      timestamp: new Date().toISOString()
+    }
+    setMessages((prev) => [...prev, userMessage])
+    
+    if (isRegistered) {
+      setChatStep('lookup')
+    } else {
+      setChatStep('register')
+    }
+  }
+
+  const handlePatientRegistered = (data: PatientData) => {
+    setPatientData(data)
+    setChatStep('chat')
+    loadChatMessages(data.firstName)
+  }
+
+  const handleCancelRegistration = () => {
+    showWelcomeMessage()
+  }
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -142,8 +200,54 @@ export function Chatbot({ isOpen, onClose, initialMessage }: ChatbotProps) {
         {!isMinimized && (
           <>
             <ScrollArea className="flex-1 bg-muted/30 p-4" ref={scrollRef}>
-              <div className="space-y-4">
-                {messages.map((message, index) => (
+              {chatStep === 'welcome' && (
+                <div className="space-y-4">
+                  {messages.map((message) => (
+                    <div key={message.id}>
+                      <div className="flex justify-start">
+                        <div className="max-w-[80%] rounded-2xl rounded-bl-sm bg-card px-4 py-3 text-card-foreground shadow-sm">
+                          <p className="whitespace-pre-line text-sm leading-relaxed">
+                            {message.content}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  <div className="mt-4 flex flex-col gap-2">
+                    <Button
+                      onClick={() => handlePatientChoice(true)}
+                      className="w-full bg-primary hover:bg-primary/90"
+                    >
+                      Sí, ya soy paciente registrado
+                    </Button>
+                    <Button
+                      onClick={() => handlePatientChoice(false)}
+                      variant="outline"
+                      className="w-full"
+                    >
+                      No, soy paciente nuevo
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {chatStep === 'lookup' && (
+                <PatientLookupForm
+                  onComplete={handlePatientRegistered}
+                  onCancel={handleCancelRegistration}
+                />
+              )}
+
+              {chatStep === 'register' && (
+                <PatientRegistrationForm
+                  onComplete={handlePatientRegistered}
+                  onCancel={handleCancelRegistration}
+                />
+              )}
+
+              {chatStep === 'chat' && (
+                <div className="space-y-4">
+                  {messages.map((message, index) => (
                   <div key={message.id}>
                     <div
                       className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
@@ -212,38 +316,41 @@ export function Chatbot({ isOpen, onClose, initialMessage }: ChatbotProps) {
                   </div>
                 )}
               </div>
+              )}
             </ScrollArea>
 
-            <div className="border-t bg-background p-4">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault()
-                  handleSendMessage()
-                }}
-                className="flex gap-2"
-              >
-                <Input
-                  ref={inputRef}
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="Escribe tu mensaje..."
-                  maxLength={500}
-                  disabled={isTyping}
-                  className="flex-1"
-                />
-                <Button
-                  type="submit"
-                  size="icon"
-                  disabled={!inputValue.trim() || isTyping}
-                  className="shrink-0 bg-primary hover:bg-primary/90"
+            {chatStep === 'chat' && (
+              <div className="border-t bg-background p-4">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    handleSendMessage()
+                  }}
+                  className="flex gap-2"
                 >
-                  <PaperPlaneRight size={20} weight="fill" />
-                </Button>
-              </form>
-              <p className="mt-2 text-center text-xs text-muted-foreground">
-                {inputValue.length}/500 caracteres
-              </p>
-            </div>
+                  <Input
+                    ref={inputRef}
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    placeholder="Escribe tu mensaje..."
+                    maxLength={500}
+                    disabled={isTyping}
+                    className="flex-1"
+                  />
+                  <Button
+                    type="submit"
+                    size="icon"
+                    disabled={!inputValue.trim() || isTyping}
+                    className="shrink-0 bg-primary hover:bg-primary/90"
+                  >
+                    <PaperPlaneRight size={20} weight="fill" />
+                  </Button>
+                </form>
+                <p className="mt-2 text-center text-xs text-muted-foreground">
+                  {inputValue.length}/500 caracteres
+                </p>
+              </div>
+            )}
           </>
         )}
       </div>

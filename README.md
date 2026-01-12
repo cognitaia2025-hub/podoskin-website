@@ -30,12 +30,16 @@ Sitio web profesional para **Podoskin Solutions**, clínica de podología en Mex
 ### Chatbot Integrado
 ✅ **Botón Flotante** - Siempre visible  
 ✅ **Modal Profesional** - Diseño médico  
-✅ **Mensaje de Bienvenida** - Automático  
+✅ **Sistema de Registro** - Identificación automática de pacientes  
+✅ **Generación de ID** - Algoritmo único basado en datos personales  
+✅ **Búsqueda de Pacientes** - Por ID o datos personales  
+✅ **Mensaje de Bienvenida** - Automático con flujo de identificación  
 ✅ **5 Respuestas Rápidas** - Navegación fácil  
-✅ **Persistencia** - LocalStorage  
-✅ **Gestión de Sesión** - UUID único  
-✅ **Reintentos Automáticos** - Manejo de errores  
-✅ **Preparado para Backend** - API lista
+✅ **Persistencia de Sesión** - Recuerda al paciente en visitas futuras  
+✅ **Gestión de Sesión** - UUID único por conversación  
+✅ **Reintentos Automáticos** - Manejo de errores robusto  
+✅ **Contexto Enriquecido** - Información del paciente en cada mensaje  
+✅ **API Completa** - 3 endpoints integrados con backend
 
 ### Servicios de Podología
 1. **Pie de Atleta** - Tratamiento especializado para infecciones fúngicas
@@ -100,7 +104,27 @@ El chatbot está preparado para conectarse a un backend. Configura la URL en tu 
 VITE_BACKEND_URL=http://localhost:8000
 ```
 
-### Endpoint del Chatbot
+### Sistema de Registro e Identificación de Pacientes
+
+El sistema automáticamente solicita al usuario identificarse o registrarse al abrir el chat. Esto permite:
+- **Registro de pacientes nuevos** con generación automática de ID único
+- **Búsqueda de pacientes existentes** por ID o datos personales
+- **Persistencia de sesión** para usuarios recurrentes
+- **Contexto enriquecido** en cada mensaje del chat
+
+#### Generación de ID de Paciente
+
+El ID se genera en dos partes:
+
+**Frontend** (ID Parcial): `[2 últimas letras apellido]-[2 últimas letras nombre]-[MMDD]`
+- Ejemplo: Abraham Córdova, 05/04/1996 → `VA-AM-0504`
+
+**Backend** (ID Completo): Agrega contador secuencial `[ID Parcial]-[####]`
+- Ejemplo: `VA-AM-0504-0009` (noveno paciente con ese ID parcial)
+
+### Endpoints del Backend
+
+#### 1. Chatbot - Enviar Mensaje
 **POST** `/api/chatbot/message`
 
 **Request Body:**
@@ -109,6 +133,13 @@ VITE_BACKEND_URL=http://localhost:8000
   "message": "Texto del mensaje del usuario",
   "session_id": "uuid-v4-de-sesion",
   "timestamp": "2026-01-12T10:00:00.000Z",
+  "patient_info": {
+    "patient_id": "VA-AM-0504-0009",
+    "first_name": "Abraham",
+    "first_last_name": "Córdova",
+    "is_registered": true,
+    "partial_id": "VA-AM-0504"
+  },
   "user_context": {
     "page": "/",
     "previous_messages": 5,
@@ -117,20 +148,116 @@ VITE_BACKEND_URL=http://localhost:8000
 }
 ```
 
+**Nota:** `patient_info` es **opcional** - solo se incluye si el usuario ya está identificado/registrado.
+
 **Response Esperada:**
 ```json
 {
-  "response": "Respuesta del bot",
+  "response": "Respuesta del bot al usuario",
   "session_id": "uuid-v4-de-sesion",
   "timestamp": "2026-01-12T10:00:05.000Z",
+  "patient_id": "VA-AM-0504-0009",
   "actions": [
     {
-      "type": "schedule",
+      "type": "schedule_appointment",
       "label": "Agendar Cita",
-      "data": {}
+      "data": {
+        "available_dates": ["2026-01-15", "2026-01-16"]
+      }
     }
   ],
-  "suggestions": ["¿Cuál es el costo?", "¿Dónde están ubicados?"]
+  "suggestions": [
+    "¿Cuál es el costo del tratamiento?",
+    "¿Dónde están ubicados?"
+  ]
+}
+```
+
+**Campos de Response:**
+- `response` (requerido): Mensaje de respuesta del bot
+- `session_id` (requerido): ID de sesión
+- `timestamp` (requerido): Fecha/hora de la respuesta
+- `patient_id` (opcional): ID del paciente (útil para confirmar registro)
+- `actions` (opcional): Acciones sugeridas al usuario
+- `suggestions` (opcional): Respuestas rápidas sugeridas
+
+---
+
+#### 2. Registro de Paciente
+**POST** `/api/patient/register`
+
+**Request Body:**
+```json
+{
+  "first_name": "Abraham",
+  "second_name": "Salvador",
+  "first_last_name": "Córdova",
+  "second_last_name": "Soto",
+  "birth_date": "1996-04-05",
+  "partial_id": "VA-AM-0504"
+}
+```
+
+**Campos:**
+- `first_name` (requerido): Primer nombre
+- `second_name` (opcional): Segundo nombre
+- `first_last_name` (requerido): Primer apellido
+- `second_last_name` (opcional): Segundo apellido
+- `birth_date` (requerido): Fecha de nacimiento en formato ISO (YYYY-MM-DD)
+- `partial_id` (requerido): ID parcial generado por el frontend
+
+**Response Esperada:**
+```json
+{
+  "success": true,
+  "patient_id": "VA-AM-0504-0009",
+  "message": "Paciente registrado exitosamente"
+}
+```
+
+**Backend debe:**
+1. Verificar si existe otro paciente con el mismo `partial_id`
+2. Generar el contador secuencial (0001, 0002, 0003, etc.)
+3. Crear ID completo: `{partial_id}-{contador}`
+4. Guardar en base de datos con todos los campos
+5. Retornar el `patient_id` completo
+
+---
+
+#### 3. Búsqueda de Paciente
+**POST** `/api/patient/lookup`
+
+**Request Body (Opción 1 - Por ID):**
+```json
+{
+  "patient_id": "VA-AM-0504-0009"
+}
+```
+
+**Request Body (Opción 2 - Por Datos):**
+```json
+{
+  "first_name": "Abraham",
+  "first_last_name": "Córdova",
+  "birth_date": "1996-04-05"
+}
+```
+
+**Response Esperada (Encontrado):**
+```json
+{
+  "found": true,
+  "patient_id": "VA-AM-0504-0009",
+  "first_name": "Abraham",
+  "first_last_name": "Córdova",
+  "registration_date": "2025-12-20T10:30:00.000Z"
+}
+```
+
+**Response Esperada (No Encontrado):**
+```json
+{
+  "found": false
 }
 ```
 
@@ -265,14 +392,17 @@ Modifica variables CSS en [`src/main.css`](src/main.css):
 La aplicación usa localStorage para:
 - **Sesiones de chat**: Expiración de 24 horas
 - **Historial de mensajes**: Últimos 50 mensajes
+- **Datos del paciente**: Información de identificación y registro
+- **Sesión de paciente**: Persistencia entre visitas
 - **Envíos de formulario**: Almacenamiento temporal
-- **Preferencias de usuario**: Función futura
 
 **Keys utilizados:**
-- `podoskin_chat_session` - ID de sesión
-- `podoskin_chat_created` - Timestamp de creación
-- `podoskin_chat_messages` - Array de mensajes
-- `podoskin_contact_form` - Último formulario enviado
+- `podoskin_chat_session` - ID de sesión UUID
+- `podoskin_chat_created` - Timestamp de creación de sesión
+- `podoskin_chat_messages` - Array de mensajes del chat
+- `podoskin_patient_data` - Datos del paciente registrado
+- `podoskin_patient_session` - Timestamp de sesión del paciente
+- `podoskin_contact_form` - Último formulario de contacto enviado
 
 ---
 

@@ -1,5 +1,10 @@
+import { PatientRegistrationRequest, PatientRegistrationResponse, PatientLookupRequest, PatientLookupResponse } from './types'
+import { loadPatientData } from './patient'
+
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000'
 const CHATBOT_ENDPOINT = '/api/chatbot/message'
+const PATIENT_REGISTER_ENDPOINT = '/api/patient/register'
+const PATIENT_LOOKUP_ENDPOINT = '/api/patient/lookup'
 const MAX_RETRIES = 3
 const RETRY_DELAY = 2000
 
@@ -40,6 +45,31 @@ export function clearMessages() {
 }
 
 async function sendMessageAttempt(message: string, sessionId: string, messageCount: number) {
+  // Cargar información del paciente si existe
+  const patientData = loadPatientData()
+  
+  const requestBody: any = {
+    message,
+    session_id: sessionId,
+    timestamp: new Date().toISOString(),
+    user_context: {
+      page: window.location.pathname,
+      previous_messages: messageCount,
+      user_agent: navigator.userAgent
+    }
+  }
+
+  // Agregar información del paciente si está disponible
+  if (patientData) {
+    requestBody.patient_info = {
+      patient_id: patientData.fullId,
+      first_name: patientData.firstName,
+      first_last_name: patientData.firstLastName,
+      is_registered: patientData.isRegistered,
+      partial_id: patientData.partialId
+    }
+  }
+
   const response = await fetch(`${BACKEND_URL}${CHATBOT_ENDPOINT}`, {
     method: 'POST',
     headers: {
@@ -47,16 +77,7 @@ async function sendMessageAttempt(message: string, sessionId: string, messageCou
       'X-Session-ID': sessionId,
       'X-Client-Type': 'web'
     },
-    body: JSON.stringify({
-      message,
-      session_id: sessionId,
-      timestamp: new Date().toISOString(),
-      user_context: {
-        page: window.location.pathname,
-        previous_messages: messageCount,
-        user_agent: navigator.userAgent
-      }
-    }),
+    body: JSON.stringify(requestBody),
     signal: AbortSignal.timeout(30000)
   })
 
@@ -85,3 +106,54 @@ export async function sendMessage(message: string, sessionId: string, messageCou
     }
   }
 }
+
+/**
+ * Registra un nuevo paciente en el backend
+ */
+export async function registerPatient(data: PatientRegistrationRequest): Promise<PatientRegistrationResponse> {
+  try {
+    const response = await fetch(`${BACKEND_URL}${PATIENT_REGISTER_ENDPOINT}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+      signal: AbortSignal.timeout(15000)
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`)
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.error('Error registering patient:', error)
+    throw new Error('No se pudo completar el registro. Por favor intenta de nuevo.')
+  }
+}
+
+/**
+ * Busca un paciente existente en el backend
+ */
+export async function lookupPatient(data: PatientLookupRequest): Promise<PatientLookupResponse> {
+  try {
+    const response = await fetch(`${BACKEND_URL}${PATIENT_LOOKUP_ENDPOINT}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+      signal: AbortSignal.timeout(15000)
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`)
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.error('Error looking up patient:', error)
+    throw new Error('No se pudo buscar el paciente. Por favor intenta de nuevo.')
+  }
+}
+

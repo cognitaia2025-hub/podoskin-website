@@ -10,10 +10,12 @@ import { ContactSection } from '@/components/ContactSection'
 import { Footer } from '@/components/Footer'
 import { Chatbot } from '@/components/Chatbot'
 import { ChatButton } from '@/components/ChatButton'
+import { SplashScreen } from '@/components/SplashScreen'
 
 function App() {
   const [isChatOpen, setIsChatOpen] = useState(false)
   const [chatInitialMessage, setChatInitialMessage] = useState<string | undefined>()
+  const [showSplash, setShowSplash] = useState(true)
 
   const handleOpenChat = (message?: string) => {
     if (message) {
@@ -28,27 +30,31 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header onOpenChat={() => handleOpenChat()} />
-      <main>
-        <HeroSection onOpenChat={() => handleOpenChat()} />
-        <ServicesSection onOpenChat={handleOpenChat} />
-        <BenefitsSection />
-        <GallerySection />
-        <LocationSection />
-        <ContactSection onOpenChat={() => handleOpenChat()} />
-      </main>
-      <Footer />
+    <>
+      {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
       
-      {!isChatOpen && <ChatButton onClick={() => handleOpenChat()} />}
-      <Chatbot
-        isOpen={isChatOpen}
-        onClose={handleCloseChat}
-        initialMessage={chatInitialMessage}
-      />
-      
-      <Toaster position="top-center" richColors />
-    </div>
+      <div className="min-h-screen bg-background">
+        <Header onOpenChat={() => handleOpenChat()} />
+        <main>
+          <HeroSection onOpenChat={() => handleOpenChat()} />
+          <ServicesSection onOpenChat={handleOpenChat} />
+          <BenefitsSection />
+          <GallerySection />
+          <LocationSection />
+          <ContactSection onOpenChat={() => handleOpenChat()} />
+        </main>
+        <Footer />
+        
+        {!isChatOpen && <ChatButton onClick={() => handleOpenChat()} />}
+        <Chatbot
+          isOpen={isChatOpen}
+          onClose={handleCloseChat}
+          initialMessage={chatInitialMessage}
+        />
+        
+        <Toaster position="top-center" richColors />
+      </div>
+    </>
   )
 }
 

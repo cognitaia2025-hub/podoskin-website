@@ -1,84 +1,114 @@
-# Podoskin Solutions - Website with Integrated Chatbot
+# 🦶 Podoskin Solutions - Página Web Oficial
 
-Professional podiatry clinic website for Podoskin Solutions in Mexicali, Baja California, featuring an intelligent chatbot for patient assistance and appointment scheduling.
+Sitio web profesional para **Podoskin Solutions**, clínica de podología en Mexicali, Baja California. Incluye chatbot integrado para atención al cliente en línea.
 
-## 🏥 About Podoskin Solutions
+---
 
-**Location:** Avenida Electricistas #1978, Colonia Libertad, Mexicali, B.C.  
-**Contact:** 686 108 3647 | WhatsApp: +52 1 686 108 3647  
-**Hours:** Monday - Saturday  
-**Instagram:** @podoskin.solutions
+## 🏥 Sobre Podoskin Solutions
 
-## ✨ Features
+**Dirección:** Avenida Electricistas #1978, Colonia Libertad, Mexicali, B.C.  
+**Teléfono:** 686 108 3647  
+**WhatsApp:** +52 1 686 108 3647  
+**Horarios:** Lunes a Sábado  
+**Instagram:** [@podoskin.solutions](https://instagram.com/podoskin.solutions)
 
-### Website
-- **Responsive Design**: Mobile-first approach with tablet and desktop optimization
-- **Hero Section**: Compelling introduction with clear calls-to-action
-- **Services Showcase**: 7 specialized podiatry services with detailed descriptions
-- **Benefits Section**: 4 key advantages of choosing Podoskin
-- **Location Map**: Embedded Google Maps with complete contact information
-- **Contact Form**: Simple inquiry form with service selection
-- **Professional Footer**: Complete navigation and social media links
+---
 
-### Services Offered
-1. **Pie de Atleta** - Fungal infection treatment
-2. **Onicomicosis** - Nail fungus treatment with advanced techniques
-3. **Uñas Enterradas** - Ingrown toenail correction surgery
-4. **Pedicure Clínico** - Professional medical foot care
-5. **Verrugas Plantares** - Plantar wart removal
-6. **Retiro de Callosidades** - Callus and corn removal
-7. **Tratamientos Láser** - Advanced laser treatments
+## ✨ Características Principales
 
-### Chatbot
-- **Floating Button**: Always accessible with pulse animation
-- **Welcome Message**: Automatic greeting with quick reply options
-- **Session Management**: UUID-based sessions with 24-hour expiration
-- **Message Persistence**: Last 50 messages saved in localStorage
-- **Backend Integration**: Ready to connect to API endpoint
-- **Error Handling**: Automatic retry with fallback contact options
-- **Typing Indicator**: Visual feedback during bot responses
-- **Quick Replies**: 5 common actions for faster interaction
-- **Responsive**: Fullscreen on mobile, fixed size on desktop
+### Página Web Completa
+✅ **Diseño Responsive** - Mobile First (320px - 1920px+)  
+✅ **Hero Section** - Presentación atractiva con CTAs  
+✅ **7 Servicios** de podología con descripciones completas  
+✅ **Sección Beneficios** - 4 razones para elegir Podoskin  
+✅ **Mapa de Ubicación** - Google Maps integrado  
+✅ **Formulario de Contacto** - Con validación  
+✅ **Footer Profesional** - Enlaces y redes sociales  
+✅ **SEO Optimizado** - Meta tags completos  
+✅ **Accesibilidad** - WCAG 2.1 AA compliant
 
-## 🚀 Getting Started
+### Chatbot Integrado
+✅ **Botón Flotante** - Siempre visible  
+✅ **Modal Profesional** - Diseño médico  
+✅ **Mensaje de Bienvenida** - Automático  
+✅ **5 Respuestas Rápidas** - Navegación fácil  
+✅ **Persistencia** - LocalStorage  
+✅ **Gestión de Sesión** - UUID único  
+✅ **Reintentos Automáticos** - Manejo de errores  
+✅ **Preparado para Backend** - API lista
 
-### Prerequisites
-- Node.js 18+ 
-- npm or yarn
+### Servicios de Podología
+1. **Pie de Atleta** - Tratamiento especializado para infecciones fúngicas
+2. **Onicomicosis** - Tratamiento de hongos en las uñas con técnicas avanzadas
+3. **Uñas Enterradas** - Procedimiento quirúrgico menor con anestesia local
+4. **Pedicure Clínico** - Cuidado profesional más allá de lo estético
+5. **Verrugas Plantares** - Eliminación mediante criocirugía o láser
+6. **Retiro de Callosidades** - Remoción de durezas y helomas
+7. **Tratamientos Láser** - Tecnología de última generación
 
-### Installation
+---
+
+## 🚀 Instalación y Uso
+
+### Requisitos Previos
+- **Node.js** ≥ 18.0.0
+- **npm** ≥ 9.0.0 o **pnpm** ≥ 8.0.0
+
+### Instalación
+
 ```bash
+# Clonar el repositorio
+git clone https://github.com/tu-usuario/podoskin-website.git
+cd podoskin-website
+
+# Instalar dependencias
 npm install
+
+# Copiar archivo de variables de entorno
+cp .env.example .env
+
+# Editar .env con tu configuración
+nano .env
 ```
 
-### Development
+### Desarrollo
+
 ```bash
+# Iniciar servidor de desarrollo
 npm run dev
+
+# Disponible en: http://localhost:5173
 ```
 
-### Build
+### Producción
+
 ```bash
+# Compilar para producción
 npm run build
+
+# Previsualizar build
+npm run preview
 ```
 
-## 🔌 Backend Integration
+---
 
-The chatbot is designed to connect to a backend API. Set the backend URL in your environment:
+## 🔌 Integración con Backend
 
-```bash
-# .env
+El chatbot está preparado para conectarse a un backend. Configura la URL en tu archivo `.env`:
+
+```env
 VITE_BACKEND_URL=http://localhost:8000
 ```
 
-### Expected API Endpoint
+### Endpoint del Chatbot
 **POST** `/api/chatbot/message`
 
 **Request Body:**
 ```json
 {
-  "message": "User message text",
-  "session_id": "uuid-v4-session-id",
-  "timestamp": "2026-01-15T10:00:00.000Z",
+  "message": "Texto del mensaje del usuario",
+  "session_id": "uuid-v4-de-sesion",
+  "timestamp": "2026-01-12T10:00:00.000Z",
   "user_context": {
     "page": "/",
     "previous_messages": 5,
@@ -87,12 +117,12 @@ VITE_BACKEND_URL=http://localhost:8000
 }
 ```
 
-**Response:**
+**Response Esperada:**
 ```json
 {
-  "response": "Bot response text",
-  "session_id": "uuid-v4-session-id",
-  "timestamp": "2026-01-15T10:00:05.000Z",
+  "response": "Respuesta del bot",
+  "session_id": "uuid-v4-de-sesion",
+  "timestamp": "2026-01-12T10:00:05.000Z",
   "actions": [
     {
       "type": "schedule",
@@ -104,14 +134,16 @@ VITE_BACKEND_URL=http://localhost:8000
 }
 ```
 
-### Error Handling
-- Automatic retry (3 attempts with exponential backoff)
-- Graceful fallback to contact information
-- Session persistence across page refreshes
+### Manejo de Errores
+- Reintentos automáticos (3 intentos con backoff exponencial)
+- Fallback a información de contacto
+- Persistencia de sesión entre recargas
 
-## 📱 Contact Information
+---
 
-All real contact information is centralized in `src/lib/data.ts`:
+## 📱 Información de Contacto
+
+Toda la información de contacto está centralizada en [`src/lib/data.ts`](src/lib/data.ts):
 
 ```typescript
 export const contactInfo = {
@@ -126,87 +158,97 @@ export const contactInfo = {
 }
 ```
 
-## 🎨 Design System
+---
 
-### Colors
-- **Primary Blue**: Medical trust and professionalism
-- **Accent Teal**: Interactive elements and CTA buttons
-- **Success Green**: Positive actions and confirmations
-- **Muted Gray**: Secondary information
+## 🎨 Sistema de Diseño
 
-### Typography
+### Paleta de Colores
+- **Primary Blue (#0077B6)**: Azul médico profesional
+- **Accent Teal (#06D6A0)**: Elementos interactivos y CTAs
+- **Success Green (#10B981)**: Acciones positivas y confirmaciones
+- **Muted Gray**: Información secundaria
+
+### Tipografía
 - **Headings**: Plus Jakarta Sans (Bold, Semibold)
 - **Body**: Inter (Regular, Medium)
-- **Scale**: 13px - 48px with responsive adjustments
+- **Escala**: 13px - 48px con ajustes responsive
 
-### Animations
-- Floating button pulse (3s interval)
-- Chat slide-up entrance (300ms)
-- Service card hover lift (200ms)
-- Typing indicator bounce
-- Smooth scroll to sections (600ms)
+### Animaciones
+- Botón flotante con pulso (3s)
+- Entrada del chat slide-up (300ms)
+- Hover en tarjetas de servicio (200ms)
+- Indicador "escribiendo..." con bounce
+- Scroll suave a secciones (600ms)
 
-## 📂 Project Structure
+---
+
+## 📂 Estructura del Proyecto
 
 ```
 src/
 ├── components/
-│   ├── ui/              # Shadcn components (40+ pre-installed)
-│   ├── Header.tsx       # Navigation with mobile menu
-│   ├── HeroSection.tsx  # Main landing section
-│   ├── ServicesSection.tsx
-│   ├── BenefitsSection.tsx
-│   ├── LocationSection.tsx
-│   ├── ContactSection.tsx
-│   ├── Footer.tsx
-│   ├── Chatbot.tsx      # Main chat interface
-│   └── ChatButton.tsx   # Floating chat button
+│   ├── ui/              # Componentes Shadcn (40+ pre-instalados)
+│   ├── Header.tsx       # Navegación con menú móvil
+│   ├── HeroSection.tsx  # Sección principal
+│   ├── ServicesSection.tsx  # 7 servicios de podología
+│   ├── BenefitsSection.tsx  # 4 beneficios
+│   ├── GallerySection.tsx   # Galería de fotos
+│   ├── LocationSection.tsx  # Mapa y contacto
+│   ├── ContactSection.tsx   # Formulario
+│   ├── Footer.tsx           # Pie de página
+│   ├── Chatbot.tsx          # Interfaz del chat
+│   └── ChatButton.tsx       # Botón flotante
 ├── lib/
-│   ├── chatbot.ts       # API integration & session management
-│   ├── data.ts          # Services, benefits, contact info
-│   ├── types.ts         # TypeScript interfaces
-│   └── utils.ts         # Utility functions
-├── App.tsx              # Main application component
-└── index.css            # Global styles & animations
+│   ├── chatbot.ts       # API y gestión de sesiones
+│   ├── data.ts          # Servicios, beneficios, contacto
+│   ├── types.ts         # Interfaces TypeScript
+│   └── utils.ts         # Funciones utilitarias
+├── assets/
+│   └── images/          # Imágenes de la clínica
+├── App.tsx              # Componente principal
+└── main.css             # Estilos globales
+
+---
+
+## 🔧 Personalización
+
+### Agregar Imágenes
+
+Coloca tus imágenes en `src/assets/images/`:
+
+```
+src/assets/images/
+├── logo_podoskin.png           # Logo de la clínica
+├── Podologo_principal.jpg      # Hero section
+└── gallery/
+    ├── consultorio_1.jpg
+    ├── consultorio_2.jpg
+    ├── tratamiento_1.jpg
+    └── equipo_laser.jpg
 ```
 
-## 🔧 Customization
+### Modificar Servicios
 
-### Adding Images
-Replace placeholder comments with actual images:
-
-```tsx
-// In HeroSection.tsx
-<img src={heroImage} alt="Podoskin Clinic" />
-
-// In ServicesSection.tsx
-<img src={serviceImage} alt="Service Name" />
-```
-
-Import images from assets:
-```typescript
-import heroImage from '@/assets/images/clinic-hero.jpg'
-```
-
-### Modifying Services
-Edit `src/lib/data.ts` to add/remove/modify services:
+Edita [`src/lib/data.ts`](src/lib/data.ts) para agregar/remover/modificar servicios:
 
 ```typescript
 export const services = [
   {
-    id: 'new-service',
-    name: 'New Service Name',
-    description: 'Detailed description...',
-    icon: 'IconName' // Must exist in iconMap
+    id: 'nuevo-servicio',
+    name: 'Nombre del Servicio',
+    description: 'Descripción detallada...',
+    icon: 'Footprints' // Debe existir en iconMap
   }
 ]
 ```
 
-### Changing Contact Info
-Update `contactInfo` object in `src/lib/data.ts`
+### Cambiar Información de Contacto
 
-### Adjusting Colors
-Modify CSS variables in `src/index.css`:
+Actualiza el objeto `contactInfo` en [`src/lib/data.ts`](src/lib/data.ts)
+
+### Ajustar Colores
+
+Modifica variables CSS en [`src/main.css`](src/main.css):
 
 ```css
 :root {
@@ -216,39 +258,117 @@ Modify CSS variables in `src/index.css`:
 }
 ```
 
-## 📊 Data Storage
+---
 
-The application uses localStorage for:
-- **Chat sessions**: 24-hour expiration
-- **Message history**: Last 50 messages
-- **Contact form submissions**: Temporary storage
-- **User preferences**: Future feature
+## 📊 Almacenamiento de Datos
 
-## 🌐 Deployment
+La aplicación usa localStorage para:
+- **Sesiones de chat**: Expiración de 24 horas
+- **Historial de mensajes**: Últimos 50 mensajes
+- **Envíos de formulario**: Almacenamiento temporal
+- **Preferencias de usuario**: Función futura
 
-The site is ready for deployment to any static hosting service:
-- GitHub Pages
-- Vercel
-- Netlify
-- Cloudflare Pages
-
-Remember to set environment variables for production backend URL.
-
-## 📝 Notes
-
-- Contact form does not send emails (shows confirmation message only)
-- Chatbot requires backend API to function fully
-- Google Maps embed uses placeholder coordinates (update with exact location)
-- All text content is in Spanish (Mexican market)
-- No dark mode implemented (single theme by default)
-
-## 🤝 Support
-
-For technical support or questions about the website:
-- Call: 686 108 3647
-- WhatsApp: wa.me/5216861083647
-- Instagram: @podoskin.solutions
+**Keys utilizados:**
+- `podoskin_chat_session` - ID de sesión
+- `podoskin_chat_created` - Timestamp de creación
+- `podoskin_chat_messages` - Array de mensajes
+- `podoskin_contact_form` - Último formulario enviado
 
 ---
 
-© 2026 Podoskin Solutions. Todos los derechos reservados.
+## 🌐 Despliegue
+
+El sitio está listo para desplegarse en cualquier servicio de hosting estático:
+
+### Vercel (Recomendado)
+```bash
+vercel
+```
+
+### Netlify
+```bash
+npm run build
+netlify deploy --prod --dir=dist
+```
+
+### GitHub Pages
+```bash
+npm run build
+# Sube la carpeta dist/
+```
+
+### Cloudflare Pages
+Conecta tu repositorio y configura:
+- **Build command:** `npm run build`
+- **Output directory:** `dist`
+
+**⚠️ Importante:** Configura `VITE_BACKEND_URL` en las variables de entorno del servicio de hosting.
+
+---
+
+## 📝 Notas Importantes
+
+- El formulario de contacto NO envía emails (solo muestra confirmación)
+- El chatbot requiere backend API para funcionar completamente
+- El mapa de Google Maps puede necesitar ajuste de coordenadas exactas
+- Todo el contenido de texto está en español (mercado mexicano)
+- No incluye modo oscuro (tema único por defecto)
+- Las imágenes son placeholders - debes reemplazarlas con imágenes reales
+
+---
+
+## ✅ Checklist Pre-Lanzamiento
+
+Antes de lanzar a producción:
+
+- [ ] Reemplazar todas las imágenes placeholder
+- [ ] Probar en dispositivos móviles reales (iOS + Android)
+- [ ] Validar formularios y chatbot
+- [ ] Revisar meta tags y SEO
+- [ ] Configurar variables de entorno de producción
+- [ ] Conectar backend del chatbot
+- [ ] Ajustar coordenadas exactas del mapa
+- [ ] Verificar enlaces de redes sociales
+- [ ] Ejecutar Lighthouse audit (Performance, SEO, A11y)
+- [ ] Probar en diferentes navegadores (Chrome, Safari, Firefox, Edge)
+- [ ] Configurar Google Analytics (opcional)
+- [ ] Configurar dominio personalizado
+- [ ] Habilitar HTTPS
+- [ ] Probar velocidad de carga (PageSpeed Insights)
+- [ ] Verificar responsiveness (320px - 2560px)
+
+---
+
+## 🤝 Soporte y Contacto
+
+Para soporte técnico o preguntas sobre el sitio web:
+
+**Podoskin Solutions**
+- 📞 Teléfono: 686 108 3647
+- 📱 WhatsApp: [wa.me/5216861083647](https://wa.me/5216861083647)
+- 📸 Instagram: [@podoskin.solutions](https://instagram.com/podoskin.solutions)
+- 📍 Dirección: Av. Electricistas #1978, Col. Libertad, Mexicali, B.C.
+
+---
+
+## 🛠 Tecnologías Utilizadas
+
+- **React 18** - Biblioteca UI
+- **TypeScript** - Tipado estático
+- **Vite** - Build tool
+- **Tailwind CSS** - Framework de estilos
+- **Shadcn/ui** - Componentes accesibles
+- **Phosphor Icons** - Iconografía
+- **Sonner** - Notificaciones toast
+- **Radix UI** - Primitivos accesibles
+
+---
+
+## 📄 Licencia
+
+Este proyecto es propiedad de **Podoskin Solutions**.  
+Todos los derechos reservados © 2026.
+
+---
+
+**🦶 Hecho con ❤️ para Podoskin Solutions - Cuidamos la salud de tus pies**
